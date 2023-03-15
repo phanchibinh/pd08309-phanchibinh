@@ -3,6 +3,8 @@ let a = prompt("enter a : ");
 let b = prompt("enter b : ");
 let c = prompt("enter c : ");
 
+let delta = b * b - 4 * a * c;
+
 if (a == 0) {
     // b x + c = 0
 }else {
