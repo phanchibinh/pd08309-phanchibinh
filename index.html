@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/icon.png">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+    <!-- Chạy chữ -->
+    <link rel="stylesheet" href="/css/animated-headlines.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+
+    <!-- Hiệu ứng hoa rơi -->
+    <script>
+        //[CDATA[
+        var pictureSrc = "https://1.bp.blogspot.com/-CXx9jt2JMRk/Vq-Lh5fm88I/AAAAAAAASwo/XivooDn_oSY/s1600/hoamai.png"; //the location of the snowflakes
+        var pictureWidth = 15; //the width of the snowflakes
+        var pictureHeight = 15; //the height of the snowflakes
+        var numFlakes = 10; //the number of snowflakes
+        var downSpeed = 0.01; //the falling speed of snowflakes (portion of screen per 100 ms)
+        var lrFlakes = 10; //the speed that the snowflakes should swing from side to side
+
+
+        if (typeof (numFlakes) != 'number' || Math.round(numFlakes) != numFlakes || numFlakes < 1) {
+            numFlakes = 10;
+        }
+
+        //draw the snowflakes
+        for (var x = 0; x < numFlakes; x++) {
+            if (document.layers) { //releave NS4 bug
+                document.write('<layer id="snFlkDiv' + x + '"><imgsrc="' + pictureSrc + '" height="' + pictureHeight + '"width="' + pictureWidth + '" alt="*" border="0"></layer>');
+            } else {
+                document.write('<div style="position:absolute; z-index:9999;"id="snFlkDiv' + x + '"><img src="' + pictureSrc + '"height="' + pictureHeight + '" width="' + pictureWidth + '" alt="*"border="0"></div>');
+            }
+        }
+
+        //calculate initial positions (in portions of browser window size)
+        var xcoords = new Array(),
+            ycoords = new Array(),
+            snFlkTemp;
+        for (var x = 0; x < numFlakes; x++) {
+            xcoords[x] = (x + 1) / (numFlakes + 1);
+            do {
+                snFlkTemp = Math.round((numFlakes - 1) * Math.random());
+            } while (typeof (ycoords[snFlkTemp]) == 'number');
+            ycoords[snFlkTemp] = x / numFlakes;
+        }
+
+        //now animate
+        function flakeFall() {
+            if (!getRefToDivNest('snFlkDiv0')) {
+                return;
+            }
+            var scrWidth = 0,
+                scrHeight = 0,
+                scrollHeight = 0,
+                scrollWidth = 0;
+            //find screen settings for all variations. doing this every time allows for resizing and scrolling
+            if (typeof (window.innerWidth) == 'number') {
+                scrWidth = window.innerWidth;
+                scrHeight = window.innerHeight;
+            } else {
+                if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+                    scrWidth = document.documentElement.clientWidth;
+                    scrHeight = document.documentElement.clientHeight;
+                } else {
+                    if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+                        scrWidth = document.body.clientWidth;
+                        scrHeight = document.body.clientHeight;
+                    }
+                }
+            }
+            if (typeof (window.pageYOffset) == 'number') {
+                scrollHeight = pageYOffset;
+                scrollWidth = pageXOffset;
+            } else {
+                if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
+                    scrollHeight = document.body.scrollTop;
+                    scrollWidth = document.body.scrollLeft;
+                } else {
+                    if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
+                        scrollHeight = document.documentElement.scrollTop;
+                        scrollWidth = document.documentElement.scrollLeft;
+                    }
+                }
+            }
+            //move the snowflakes to their new position
+            for (var x = 0; x < numFlakes; x++) {
+                if (ycoords[x] * scrHeight > scrHeight - pictureHeight) {
+                    ycoords[x] = 0;
+                }
+                var divRef = getRefToDivNest('snFlkDiv' + x);
+                if (!divRef) {
+                    return;
+                }
+                if (divRef.style) {
+                    divRef = divRef.style;
+                }
+                var oPix = document.childNodes ? 'px' : 0;
+                divRef.top = (Math.round(ycoords[x] * scrHeight) + scrollHeight) + oPix;
+                divRef.left = (Math.round(((xcoords[x] * scrWidth) - (pictureWidth / 2)) + ((scrWidth / ((numFlakes + 1) * 4)) * (Math.sin(lrFlakes * ycoords[x]) - Math.sin(3 * lrFlakes * ycoords[x])))) + scrollWidth) + oPix;
+                ycoords[x] += downSpeed;
+            }
+        }
+
+        //DHTML handlers
+        function getRefToDivNest(divName) {
+            if (document.layers) {
+                return document.layers[divName];
+            } //NS4
+            if (document[divName]) {
+                return document[divName];
+            } //NS4 also
+            if (document.getElementById) {
+                return document.getElementById(divName);
+            } //DOM (IE5+, NS6+, Mozilla0.9+, Opera)
+            if (document.all) {
+                return document.all[divName];
+            } //Proprietary DOM - IE4
+            return false;
+        }
+
+        window.setInterval('flakeFall();', 100);
+        //]]>
+    </script>
+
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div style="height: 90px; padding-top: 30px; box-sizing: border-box; margin-bottom: 120px;">
+            <div class="hero-area slider-1" id="slider-area">
+                <div class="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-offset-2 col-sm-offset-4 col-md-8 col-sm-9 col-sm-offset-3">
+                                <div id="service" class="hero-text">
+                                    <h1 class="title2 cd-headline clip is-full-width font-weight-bold"
+                                        style="color: rgb(78, 51, 253);">Du Lịch Biển Đảo<br>
+                                        <span class="cd-words-wrapper">
+                                            <b class="is-visible">ĐẢO LÝ SƠN</b>
+                                            <b>Quê Hương Tôi<b>
+                                        </span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a id="active" href="index.html">Trang chủ</a>
+        <a href="/html/gioithieu.html">Giới thiệu chi tiết</a>
+        <a href="/html/lienhe.html">Liên hệ</a>
+    </div>
+
+    <!-- The flexible grid (content) -->
+    <div class="row">
+        <div class="main">
+            <div class="slideshow-container">
+
+                <div class="mySlides fade">
+                    <div class="numbertext">1 / 3</div>
+                    <img src="/images/lyson1.png" style="width:100%; height: 500px;">
+                    <div class="text">Đảo Lý Sơn Từ Trên Cao Nhìn Xuống</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <div class="numbertext">2 / 3</div>
+                    <img src="/images/lyson2.jpg" style="width:100%; height: 500px;">
+                    <div class="text">Cảng Biển Lý Sơn</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <div class="numbertext">3 / 3</div>
+                    <img src="/images/lyson3.jpg" style="width:100%; height: 500px;">
+                    <div class="text">Đảo Lý Sơn Tuyệt Đẹp</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">❮</a>
+                <a class="next" onclick="plusSlides(1)">❯</a>
+
+            </div>
+            <br>
+
+            <div style="text-align:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+
+            <h5>VietNam, Mar 27, 2023</h5>
+            <img src="/images/lyson5.jpg" alt="" style="height:500px; width: 900px; background-size: cover; margin-left: 150px;">
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco.</p>
+            <br>
+
+            <h5>VietNam, Mar 27, 2023</h5>
+            <img src="/images/lyson6.jpg" alt="" style="height:500px; width: 900px; background-size: cover; margin-left: 150px;">
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer page-footer text-center text-md-left unique-color-dark pt-0 mt-5"
+        style="transition: all linear 1s;">
+        <div class="top-pink-footer">
+            <div class="container">
+
+                <div class="row py-4 d-flex align-items-center">
+
+                    <div class="col-md-6 col-lg-5 text-center text-md-left mb-md-0">
+                        <h6 class="mb-4 mb-md-0 white-text">Hãy liên hệ với tôi qua mạng xã hội!</h6>
+                    </div>
+
+                    <div class="col-md-6 col-lg-7 text-center text-md-right">
+                        <a class="p-2 m-2 fa-lg fb-ic ml-0" href="https://www.facebook.com/binh.chi.24/">
+                            <i class="fab fa-facebook-f white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg tw-ic">
+                            <i class="fab fa-twitter white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg gplus-ic">
+                            <i class="fab fa-google-plus-g white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg li-ic">
+                            <i class="fab fa-linkedin-in white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg ins-ic">
+                            <i class="fab fa-instagram white-text mr-lg-4"> </i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-copyright text-center py-3">
+            <div class="container-fluid">
+                <h3 class="">PS***** - Phan Chí Bình - binhpcps*****@fpt.edu.vn</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chạy chữ -->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+        }
+    </script>
+</body>
+
+</html>
