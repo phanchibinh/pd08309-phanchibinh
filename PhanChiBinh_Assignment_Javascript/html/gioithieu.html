@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/icon.png">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+    <!-- Chạy chữ -->
+    <link rel="stylesheet" href="/css/animated-headlines.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Hiệu ứng hoa rơi -->
+    <script>
+        //[CDATA[
+        var pictureSrc = "https://1.bp.blogspot.com/-CXx9jt2JMRk/Vq-Lh5fm88I/AAAAAAAASwo/XivooDn_oSY/s1600/hoamai.png"; //the location of the snowflakes
+        var pictureWidth = 15; //the width of the snowflakes
+        var pictureHeight = 15; //the height of the snowflakes
+        var numFlakes = 10; //the number of snowflakes
+        var downSpeed = 0.01; //the falling speed of snowflakes (portion of screen per 100 ms)
+        var lrFlakes = 10; //the speed that the snowflakes should swing from side to side
+
+
+        if (typeof (numFlakes) != 'number' || Math.round(numFlakes) != numFlakes || numFlakes < 1) {
+            numFlakes = 10;
+        }
+
+        //draw the snowflakes
+        for (var x = 0; x < numFlakes; x++) {
+            if (document.layers) { //releave NS4 bug
+                document.write('<layer id="snFlkDiv' + x + '"><imgsrc="' + pictureSrc + '" height="' + pictureHeight + '"width="' + pictureWidth + '" alt="*" border="0"></layer>');
+            } else {
+                document.write('<div style="position:absolute; z-index:9999;"id="snFlkDiv' + x + '"><img src="' + pictureSrc + '"height="' + pictureHeight + '" width="' + pictureWidth + '" alt="*"border="0"></div>');
+            }
+        }
+
+        //calculate initial positions (in portions of browser window size)
+        var xcoords = new Array(),
+            ycoords = new Array(),
+            snFlkTemp;
+        for (var x = 0; x < numFlakes; x++) {
+            xcoords[x] = (x + 1) / (numFlakes + 1);
+            do {
+                snFlkTemp = Math.round((numFlakes - 1) * Math.random());
+            } while (typeof (ycoords[snFlkTemp]) == 'number');
+            ycoords[snFlkTemp] = x / numFlakes;
+        }
+
+        //now animate
+        function flakeFall() {
+            if (!getRefToDivNest('snFlkDiv0')) {
+                return;
+            }
+            var scrWidth = 0,
+                scrHeight = 0,
+                scrollHeight = 0,
+                scrollWidth = 0;
+            //find screen settings for all variations. doing this every time allows for resizing and scrolling
+            if (typeof (window.innerWidth) == 'number') {
+                scrWidth = window.innerWidth;
+                scrHeight = window.innerHeight;
+            } else {
+                if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+                    scrWidth = document.documentElement.clientWidth;
+                    scrHeight = document.documentElement.clientHeight;
+                } else {
+                    if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+                        scrWidth = document.body.clientWidth;
+                        scrHeight = document.body.clientHeight;
+                    }
+                }
+            }
+            if (typeof (window.pageYOffset) == 'number') {
+                scrollHeight = pageYOffset;
+                scrollWidth = pageXOffset;
+            } else {
+                if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
+                    scrollHeight = document.body.scrollTop;
+                    scrollWidth = document.body.scrollLeft;
+                } else {
+                    if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
+                        scrollHeight = document.documentElement.scrollTop;
+                        scrollWidth = document.documentElement.scrollLeft;
+                    }
+                }
+            }
+            //move the snowflakes to their new position
+            for (var x = 0; x < numFlakes; x++) {
+                if (ycoords[x] * scrHeight > scrHeight - pictureHeight) {
+                    ycoords[x] = 0;
+                }
+                var divRef = getRefToDivNest('snFlkDiv' + x);
+                if (!divRef) {
+                    return;
+                }
+                if (divRef.style) {
+                    divRef = divRef.style;
+                }
+                var oPix = document.childNodes ? 'px' : 0;
+                divRef.top = (Math.round(ycoords[x] * scrHeight) + scrollHeight) + oPix;
+                divRef.left = (Math.round(((xcoords[x] * scrWidth) - (pictureWidth / 2)) + ((scrWidth / ((numFlakes + 1) * 4)) * (Math.sin(lrFlakes * ycoords[x]) - Math.sin(3 * lrFlakes * ycoords[x])))) + scrollWidth) + oPix;
+                ycoords[x] += downSpeed;
+            }
+        }
+
+        //DHTML handlers
+        function getRefToDivNest(divName) {
+            if (document.layers) {
+                return document.layers[divName];
+            } //NS4
+            if (document[divName]) {
+                return document[divName];
+            } //NS4 also
+            if (document.getElementById) {
+                return document.getElementById(divName);
+            } //DOM (IE5+, NS6+, Mozilla0.9+, Opera)
+            if (document.all) {
+                return document.all[divName];
+            } //Proprietary DOM - IE4
+            return false;
+        }
+
+        window.setInterval('flakeFall();', 100);
+        //]]>
+    </script>
+
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <canvas id="canvas" width="200" height="200" style="background-color:#fefbfb; float: right;"></canvas>
+        <div style="height: 90px; padding-top: 30px; box-sizing: border-box; margin-bottom: 120px;">
+            <div class="hero-area slider-1" id="slider-area">
+                <div class="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-offset-2 col-sm-offset-4 col-md-8 col-sm-9 col-sm-offset-3">
+                                <div id="service" class="hero-text">
+                                    <h1 class="title2 cd-headline clip is-full-width font-weight-bold"
+                                        style="color: rgb(78, 51, 253);">Du Lịch Biển Đảo<br>
+                                        <span class="cd-words-wrapper">
+                                            <b class="is-visible">ĐẢO LÝ SƠN</b>
+                                            <b>Quê Hương Tôi<b>
+                                        </span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/index.html">Trang chủ</a>
+        <a id="active" href="/html/gioithieu.html">Giới thiệu chi tiết</a>
+        <a href="/html/lienhe.html">Liên hệ</a>
+    </div>
+
+    <!-- The flexible grid (content) -->
+    <div class="row">
+        <div class="side">
+            <h2>Giới thiệu về đảo Lý Sơn</h2>
+            <h5>Ảnh về đảo:</h5>
+            <img src="/images/lyson1.jpg" alt="" style="height:200px; width: 392px; background-size: cover;">
+            <p>Toàn cảnh nhìn từ trên cao xuống từ flycam...</p>
+
+            <h4>Một số hình ảnh khác về Lý Sơn</h4>
+            <p>Phong cảng hữu tình tuyệt đẹp từ trên cao nhìn xuống...</p>
+            <div style="text-align: center;">
+                <img src="/images/lyson2.jpg" alt="" style="height:200px; width: 350px; background-size: cover;"><br><br>
+                <img src="/images/lyson3.jpg" alt="" style="height:200px; width: 350px; background-size: cover;"><br><br>
+                <img src="/images/lyson4.jpg" alt="" style="height:200px; width: 350px; background-size: cover;"><br><br>
+                <img src="/images/lyson7.jpg" alt="" style="height:200px; width: 350px; background-size: cover;">
+            </div>
+        </div>
+        <div class="main">
+            <h3>ĐỒNG RUỘNG NƠI CANH TÁC CỦA NGƯỜI DÂN Ở ĐẢO</h3>
+            <h5>Ngày 9 tháng 4 năm 2023</h5>
+            <img src="/images/lyson5.jpg" alt="" style="height:300px; width: 750px; background-size: cover;">
+            <p style="float: right;">Trích dẫn: CoskerDang</p>
+            <p>
+                <br>Ngoài Đảo Bé được mệnh danh là Maldives của Việt Nam, trên đảo có đến 4 di tích nơi mà khách du lịch có thể đến và tham quan gồm đình làng Vĩnh An, đình làng An Hải, chùa Hang, Âm Linh Tự. Đặc biệt, một số các di chỉ văn hóa Sa Huỳnh cũng được tìm thấy ở các khu vực như suối Chình, xóm Ốc.<br>
+                Người dân trên đảo Lý Sơn chủ yếu sinh sống bằng nghề đánh bắt hải sản và trồng tỏi. Với diện tích trồng tỏi khổng lồ và tỏi ở đây luôn thơm ngon hơn ở những nơi khách nên giới thiệu về đảo Lý Sơn là vương quốc tỏi thì cũng chẳng hề sai.
+            </p>
+            <br>
+            <h2>Phong cảnh cổng Tò Vò vào lúc hoàng hôn trên đảo</h2>
+            <h5>Ngày 9 tháng 4 năm 2023</h5>
+            <img src="/images/lyson6.jpg" alt="" style="height:300px; width: 750px; background-size: cover;">
+            <p style="float: right;">Trích dẫn: CoskerDang</p>
+            <p>
+                <br>Du lịch đảo Lý Sơn, nổi tiếng nhất vẫn là biển, nơi có những bãi biển đẹp đến nao lòng, và nếu đã đi Lý Sơn mà không tắm biển, hoặc ít nhất là đi dạo biển thì chuyến đi ấy mới chỉ trọn vẹn 1 nửa thôi.<br>
+                Như lời giới thiệu về đảo Lý Sơn thì ngoài điểm đến chính là đảo Lớn, hay còn gọi là đảo Cù Lao Ré, bởi trên đảo trồng rất nhiều cây ré thì đảo Bé lại là nơi khiến mọi người thích thú nhất. Bởi đơn giản, đảo Bé vốn sở hữu nhiều bãi tắm đẹp và còn được nhiều người cho rằng là bãi tắm đẹp nhất của Việt Nam. Đặc biệt, các tour lặn ngắm san hô ở đảo Lý Sơn còn chọn đảo Bé vì nước biển xanh, nguồn san hô phong phú rất lý tưởng để du khách khi đến có thể tham gia vào.<br>
+                Rồi còn rất nhiều điểm đến mà tourdanangcity muốn giới thiệu đến bạn: ♦ Những điểm đến ấn tượng: Cổng Tò Vò, Hang Câu, đỉnh Thới Lới, cột cờ Tổ Quốc, chợ đêm,vv… ♦ Những điểm đến tâm linh: Chùa Hang, chùa Đục Quan Âm Đài, dinh Bà Roi, đình làng An Hải, miếu bà Chúa Ngọc, di tích hải đội Hoàng Sa – Trường Sa, Âm linh tự, các ngôi mộ cổ,vv…
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer page-footer text-center text-md-left unique-color-dark pt-0 mt-5"
+        style="transition: all linear 1s;">
+        <div class="top-pink-footer">
+            <div class="container">
+
+                <div class="row py-4 d-flex align-items-center">
+
+                    <div class="col-md-6 col-lg-5 text-center text-md-left mb-md-0">
+                        <h6 class="mb-4 mb-md-0 white-text">Hãy liên hệ với tôi qua mạng xã hội!</h6>
+                    </div>
+
+                    <div class="col-md-6 col-lg-7 text-center text-md-right">
+                        <a class="p-2 m-2 fa-lg fb-ic ml-0" href="https://www.facebook.com/d.otaku1306/">
+                            <i class="fab fa-facebook-f white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg tw-ic">
+                            <i class="fab fa-twitter white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg gplus-ic">
+                            <i class="fab fa-google-plus-g white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg li-ic">
+                            <i class="fab fa-linkedin-in white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg ins-ic">
+                            <i class="fab fa-instagram white-text mr-lg-4"> </i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-copyright text-center py-3">
+            <div class="container-fluid">
+                <h3 class="">PS08309 - Phan Chí Bình - binhpd08309@fpt.edu.vn</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chạy chữ -->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+
+    <!-- Đồng hồ -->
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var radius = canvas.height / 2;
+        ctx.translate(radius, radius);
+        radius = radius * 0.90
+        setInterval(drawClock, 1000);
+
+        function drawClock() {
+            drawFace(ctx, radius);
+            drawNumbers(ctx, radius);
+            drawTime(ctx, radius);
+        }
+
+        function drawFace(ctx, radius) {
+            var grad;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+            grad.addColorStop(0, '#333');
+            grad.addColorStop(0.5, 'white');
+            grad.addColorStop(1, '#333');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = radius * 0.1;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+
+        function drawNumbers(ctx, radius) {
+            var ang;
+            var num;
+            ctx.font = radius * 0.15 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            for (num = 1; num < 13; num++) {
+                ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius * 0.85);
+                ctx.rotate(-ang);
+                ctx.fillText(num.toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius * 0.85);
+                ctx.rotate(-ang);
+            }
+        }
+
+        function drawTime(ctx, radius) {
+            var now = new Date();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            //hour
+            hour = hour % 12;
+            hour = (hour * Math.PI / 6) +
+                (minute * Math.PI / (6 * 60)) +
+                (second * Math.PI / (360 * 60));
+            drawHand(ctx, hour, radius * 0.5, radius * 0.07);
+            //minute
+            minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+            drawHand(ctx, minute, radius * 0.8, radius * 0.07);
+            // second
+            second = (second * Math.PI / 30);
+            drawHand(ctx, second, radius * 0.9, radius * 0.02);
+        }
+
+        function drawHand(ctx, pos, length, width) {
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(pos);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-pos);
+        }
+    </script>
+</body>
+
+</html>

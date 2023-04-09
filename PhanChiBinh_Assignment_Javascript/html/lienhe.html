@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/icon.png">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+
+    <!-- Chạy chữ -->
+    <link rel="stylesheet" href="/css/animated-headlines.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Hiệu ứng hoa rơi -->
+    <script>
+        //[CDATA[
+        var pictureSrc = "https://1.bp.blogspot.com/-CXx9jt2JMRk/Vq-Lh5fm88I/AAAAAAAASwo/XivooDn_oSY/s1600/hoamai.png"; //the location of the snowflakes
+        var pictureWidth = 15; //the width of the snowflakes
+        var pictureHeight = 15; //the height of the snowflakes
+        var numFlakes = 10; //the number of snowflakes
+        var downSpeed = 0.01; //the falling speed of snowflakes (portion of screen per 100 ms)
+        var lrFlakes = 10; //the speed that the snowflakes should swing from side to side
+
+
+        if (typeof (numFlakes) != 'number' || Math.round(numFlakes) != numFlakes || numFlakes < 1) {
+            numFlakes = 10;
+        }
+
+        //draw the snowflakes
+        for (var x = 0; x < numFlakes; x++) {
+            if (document.layers) { //releave NS4 bug
+                document.write('<layer id="snFlkDiv' + x + '"><imgsrc="' + pictureSrc + '" height="' + pictureHeight + '"width="' + pictureWidth + '" alt="*" border="0"></layer>');
+            } else {
+                document.write('<div style="position:absolute; z-index:9999;"id="snFlkDiv' + x + '"><img src="' + pictureSrc + '"height="' + pictureHeight + '" width="' + pictureWidth + '" alt="*"border="0"></div>');
+            }
+        }
+
+        //calculate initial positions (in portions of browser window size)
+        var xcoords = new Array(),
+            ycoords = new Array(),
+            snFlkTemp;
+        for (var x = 0; x < numFlakes; x++) {
+            xcoords[x] = (x + 1) / (numFlakes + 1);
+            do {
+                snFlkTemp = Math.round((numFlakes - 1) * Math.random());
+            } while (typeof (ycoords[snFlkTemp]) == 'number');
+            ycoords[snFlkTemp] = x / numFlakes;
+        }
+
+        //now animate
+        function flakeFall() {
+            if (!getRefToDivNest('snFlkDiv0')) {
+                return;
+            }
+            var scrWidth = 0,
+                scrHeight = 0,
+                scrollHeight = 0,
+                scrollWidth = 0;
+            //find screen settings for all variations. doing this every time allows for resizing and scrolling
+            if (typeof (window.innerWidth) == 'number') {
+                scrWidth = window.innerWidth;
+                scrHeight = window.innerHeight;
+            } else {
+                if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+                    scrWidth = document.documentElement.clientWidth;
+                    scrHeight = document.documentElement.clientHeight;
+                } else {
+                    if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+                        scrWidth = document.body.clientWidth;
+                        scrHeight = document.body.clientHeight;
+                    }
+                }
+            }
+            if (typeof (window.pageYOffset) == 'number') {
+                scrollHeight = pageYOffset;
+                scrollWidth = pageXOffset;
+            } else {
+                if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
+                    scrollHeight = document.body.scrollTop;
+                    scrollWidth = document.body.scrollLeft;
+                } else {
+                    if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
+                        scrollHeight = document.documentElement.scrollTop;
+                        scrollWidth = document.documentElement.scrollLeft;
+                    }
+                }
+            }
+            //move the snowflakes to their new position
+            for (var x = 0; x < numFlakes; x++) {
+                if (ycoords[x] * scrHeight > scrHeight - pictureHeight) {
+                    ycoords[x] = 0;
+                }
+                var divRef = getRefToDivNest('snFlkDiv' + x);
+                if (!divRef) {
+                    return;
+                }
+                if (divRef.style) {
+                    divRef = divRef.style;
+                }
+                var oPix = document.childNodes ? 'px' : 0;
+                divRef.top = (Math.round(ycoords[x] * scrHeight) + scrollHeight) + oPix;
+                divRef.left = (Math.round(((xcoords[x] * scrWidth) - (pictureWidth / 2)) + ((scrWidth / ((numFlakes + 1) * 4)) * (Math.sin(lrFlakes * ycoords[x]) - Math.sin(3 * lrFlakes * ycoords[x])))) + scrollWidth) + oPix;
+                ycoords[x] += downSpeed;
+            }
+        }
+
+        //DHTML handlers
+        function getRefToDivNest(divName) {
+            if (document.layers) {
+                return document.layers[divName];
+            } //NS4
+            if (document[divName]) {
+                return document[divName];
+            } //NS4 also
+            if (document.getElementById) {
+                return document.getElementById(divName);
+            } //DOM (IE5+, NS6+, Mozilla0.9+, Opera)
+            if (document.all) {
+                return document.all[divName];
+            } //Proprietary DOM - IE4
+            return false;
+        }
+
+        window.setInterval('flakeFall();', 100);
+        //]]>
+    </script>
+
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <canvas id="canvas" width="200" height="200" style="background-color:#fefbfb; float: right;"></canvas>
+        <div style="height: 90px; padding-top: 30px; box-sizing: border-box; margin-bottom: 120px;">
+            <div class="hero-area slider-1" id="slider-area">
+                <div class="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-offset-2 col-sm-offset-4 col-md-8 col-sm-9 col-sm-offset-3">
+                                <div id="service" class="hero-text">
+                                    <h1 class="title2 cd-headline clip is-full-width font-weight-bold"
+                                        style="color: rgb(78, 51, 253);">Du Lịch Biển Đảo<br>
+                                        <span class="cd-words-wrapper">
+                                            <b class="is-visible">ĐẢO LÝ SƠN</b>
+                                            <b>Quê Hương Tôi<b>
+                                        </span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/index.html">Trang chủ</a>
+        <a href="/html/gioithieu.html">Giới thiệu chi tiết</a>
+        <a id="active" href="/html/lienhe.html">Liên hệ</a>
+    </div>
+
+    <!-- The flexible grid (content) -->
+    <div class="row">
+        <div class="ml-4">
+            <h5 style="text-align: center;">Vị trí đảo Lý Sơn</h5>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30775.377696691496!2d109.10306786081222!3d15.380698594654753!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31683e944435ccd3%3A0x16b8aaf221999706!2zxJDhuqNvIEzDvSBTxqFu!5e0!3m2!1svi!2s!4v1679676062037!5m2!1svi!2s" width="330" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="main">
+            <button class="btn btn-danger col-11">ĐỂ LẠI THÔNG TIN LIÊN HỆ VỚI CHÚNG TÔI</button>
+            <form action="" onsubmit="return KiemTra()">
+                <div class="form-group col-11">
+                    <label>Họ và tên</label>
+                    <input id="name" name="name" type="text" class="form-control" placeholder="Nhập Tên">
+                    <div id="error1" class="error"></div>
+                </div>
+
+                <div class="form-group col-11">
+                    <label>Giới tính: </label>
+                    <input type="radio" name="gender"> <small style="font-size: large;">Nam</small>
+                    <input type="radio" name="gender"> <small style="font-size: large;">Nữ</small>
+                    <div id="error2" class="error"></div>
+                </div>
+
+                <div class="form-group col-11">
+                    <label>Email</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="Nhập email">
+                    <div id="error3" class="error"></div>
+                </div>
+
+                <div class="form-group col-11">
+                    <label>Số điện thoại</label>
+                    <input id="phone" name="phone" type="text" class="form-control" placeholder="Nhập số điện thoại">
+                    <div id="error4" class="error"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 250px;">Phản hồi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer page-footer text-center text-md-left unique-color-dark pt-0 mt-5"
+        style="transition: all linear 1s;">
+        <div class="top-pink-footer">
+            <div class="container">
+
+                <div class="row py-4 d-flex align-items-center">
+
+                    <div class="col-md-6 col-lg-5 text-center text-md-left mb-md-0">
+                        <h6 class="mb-4 mb-md-0 white-text">Hãy liên hệ với tôi qua mạng xã hội!</h6>
+                    </div>
+
+                    <div class="col-md-6 col-lg-7 text-center text-md-right">
+                        <a class="p-2 m-2 fa-lg fb-ic ml-0" href="https://www.facebook.com/d.otaku1306/">
+                            <i class="fab fa-facebook-f white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg tw-ic">
+                            <i class="fab fa-twitter white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg gplus-ic">
+                            <i class="fab fa-google-plus-g white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg li-ic">
+                            <i class="fab fa-linkedin-in white-text mr-lg-4"> </i>
+                        </a>
+                        <a class="p-2 m-2 fa-lg ins-ic">
+                            <i class="fab fa-instagram white-text mr-lg-4"> </i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-copyright text-center py-3">
+            <div class="container-fluid">
+                <h3 class="">PS08309 - Phan Chí Bình - binhpd08309@fpt.edu.vn</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chạy chữ -->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script src="/js/lienhe.js"></script>
+
+    <!-- Đồng hồ -->
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var radius = canvas.height / 2;
+        ctx.translate(radius, radius);
+        radius = radius * 0.90
+        setInterval(drawClock, 1000);
+
+        function drawClock() {
+            drawFace(ctx, radius);
+            drawNumbers(ctx, radius);
+            drawTime(ctx, radius);
+        }
+
+        function drawFace(ctx, radius) {
+            var grad;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+            grad.addColorStop(0, '#333');
+            grad.addColorStop(0.5, 'white');
+            grad.addColorStop(1, '#333');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = radius * 0.1;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+
+        function drawNumbers(ctx, radius) {
+            var ang;
+            var num;
+            ctx.font = radius * 0.15 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            for (num = 1; num < 13; num++) {
+                ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius * 0.85);
+                ctx.rotate(-ang);
+                ctx.fillText(num.toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius * 0.85);
+                ctx.rotate(-ang);
+            }
+        }
+
+        function drawTime(ctx, radius) {
+            var now = new Date();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            //hour
+            hour = hour % 12;
+            hour = (hour * Math.PI / 6) +
+                (minute * Math.PI / (6 * 60)) +
+                (second * Math.PI / (360 * 60));
+            drawHand(ctx, hour, radius * 0.5, radius * 0.07);
+            //minute
+            minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+            drawHand(ctx, minute, radius * 0.8, radius * 0.07);
+            // second
+            second = (second * Math.PI / 30);
+            drawHand(ctx, second, radius * 0.9, radius * 0.02);
+        }
+
+        function drawHand(ctx, pos, length, width) {
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(pos);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-pos);
+        }
+    </script>
+</body>
+
+</html>
