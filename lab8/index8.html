@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+    <style>
+        .container {
+            text-align: center;
+        }
+        .tex{
+            color: blueviolet;
+        }
+    </style>
+</head>
+
+<body class="container">
+    <h1 class="tex">I Love Music</h1>
+    <div></div>
+    <video src="spirit-world-desktop-wallpaperwaifu.com.mp4"
+        id="video" width="700px" controls></video>
+    <div id="volume"></div>
+    <hr>
+    <button class="btn btn-danger" onclick="play()">Play</button>
+    <button class="btn btn-info" onclick="pause()">Pause</button>
+    <button class="btn btn-dark" onclick="stop()">Stop</button>
+    <button class="btn btn-primary" onclick="vol1()">Vol+</button>
+    <button class="btn btn-secondary" onclick="vol2()">Vol-</button>
+    <button class="btn btn-success" onclick="mute()">Mute</button>
+    <button class="btn btn-light" id="loop" onclick="loop()" video.loop="false">Loop</button>
+
+    <script>
+        var video = document.getElementById("video");
+        var vol = document.getElementById("volume");
+        video.addEventListener('ended', function () {
+            vol.innerText = "";
+        });
+        function play() {
+            video.play();
+            vol.innerText = "Số giây: " + video.duration;
+        }
+        function pause() { video.pause() }
+        function stop() { video.load() }
+        function mute() { 
+            if(video.muted = !video.muted) return alert('Đã tắt âm thanh.')
+            else return alert('Đã bật âm thanh.')
+        }
+        function vol1() {
+            if (video.volume >= 1) return alert('Âm lượng đã cao nhất.');
+            video.volume = (video.volume + 0.1).toFixed(1);
+            vol.innerText = "Volume=" + video.volume;
+        }
+        function vol2() {
+            if (video.volume <= 0) return alert('Âm lượng đã thấp nhất.');
+            video.volume = (video.volume - 0.1).toFixed(1);
+            vol.innerText = "Volume=" + video.volume;
+        }
+        function loop() {
+            if (document.getElementById('loop').video.loop.endsWith("false")) {
+                document.getElementById('loop').video.loop = "true"
+                alert('Bật tính năng lặp lại video.')
+            } else {
+                document.getElementById('loop').video.loop = "false"
+                alert('Tắt tính năng lặp lại video.')
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+    integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
+    crossorigin="anonymous"></script>
